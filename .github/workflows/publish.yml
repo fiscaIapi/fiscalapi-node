@@ -1,4 +1,5 @@
-# Publica no npm a cada tag vX.Y.Z, com atestação de proveniência.
+# Publica no npm a cada tag vX.Y.Z, com atestação de proveniência. A tag precisa
+# bater com a versão do package.json e do src/version.ts.
 # Configuração única no npmjs.com: pacote fiscalapi-br → Settings →
 # Trusted Publishers → GitHub Actions: owner "fiscaIapi", repo
 # "fiscalapi-node", workflow "publish.yml". (Alternativa: secret NPM_TOKEN.)
@@ -22,6 +23,13 @@ jobs:
         with:
           node-version: 'lts/*'
           registry-url: 'https://registry.npmjs.org'
+      - name: Confere a tag com a versão do pacote
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          pkg=$(node -p "require('./package.json').version")
+          src=$(sed -n "s/.*VERSION = '\(.*\)'.*/\1/p" src/version.ts)
+          echo "tag=$tag package.json=$pkg version.ts=$src"
+          [ "$tag" = "$pkg" ] && [ "$tag" = "$src" ]
       - name: Atualiza o npm (trusted publishing exige npm 11.5 ou superior)
         run: npm install -g npm@latest
       - run: npm install --no-audit --no-fund
