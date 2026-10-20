@@ -1,0 +1,26 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    strategy:
+      matrix:
+        node: ['18', '20', '22']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - run: npm install --no-audit --no-fund
+      - run: npm run build
+      - name: Smoke test (ESM e CommonJS carregam sem rede)
+        run: |
+          node --input-type=module -e "import { FiscalAPI } from './dist/esm/index.js'; new FiscalAPI('x'); console.log('esm ok')"
+          node -e "const { FiscalAPI } = require('./dist/cjs/index.js'); new FiscalAPI('x'); console.log('cjs ok')"

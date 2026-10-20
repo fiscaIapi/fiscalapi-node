@@ -1,0 +1,71 @@
+{
+  "name": "fiscalapi-br",
+  "version": "0.1.0",
+  "description": "SDK da FiscalAPI (Brasil): Inscrição Estadual, CNPJ, certidões, NF-e, SIGEF, CNIR e perfil do produtor rural.",
+  "license": "MIT",
+  "author": {
+    "name": "FiscalAPI",
+    "email": "contato@fiscalapi.com.br",
+    "url": "https://fiscalapi.com.br"
+  },
+  "homepage": "https://docs.fiscalapi.com.br",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fiscaIapi/fiscalapi-node.git"
+  },
+  "bugs": {
+    "url": "https://github.com/fiscaIapi/fiscalapi-node/issues"
+  },
+  "keywords": [
+    "fiscalapi",
+    "inscricao-estadual",
+    "sefaz",
+    "cnpj",
+    "cnd",
+    "certidao",
+    "nfe",
+    "sigef",
+    "cnir",
+    "produtor-rural",
+    "brasil"
+  ],
+  "type": "module",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/esm/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/esm/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/index.d.ts",
+        "default": "./dist/cjs/index.js"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": false,
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
+    "build": "npm run clean && tsc -p tsconfig.esm.json && tsc -p tsconfig.cjs.json && node -e \"require('fs').writeFileSync('dist/cjs/package.json', JSON.stringify({type:'commonjs'}))\"",
+    "typecheck": "tsc -p tsconfig.esm.json --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  }
+}
